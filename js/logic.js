@@ -60,11 +60,14 @@ function playGame() {
     if (result.includes("win")) {
       playerScore++;
       i++;
-    } else if (result.includes("lose")) {
+    } 
+    else if (result.includes("lose")) {
       computerScore++;
       i++;
     }
-
+      else if (result.includes("tie")) {
+      i++;
+    }
   }
   console.log(`Final Score: Player ${playerScore} :  Computer ${computerScore}`);
   if (playerScore > computerScore) {
@@ -76,9 +79,11 @@ function playGame() {
   else {
     console.log("The game is a tie!");
   }
+    
 
   playAgain();
 }
+
 
 function playAgain() {
   const playAgain = confirm("Do you want to play again?");
