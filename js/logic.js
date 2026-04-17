@@ -87,4 +87,5 @@ function playAgain() {
     console.log("Thanks for playing!");
   }
 }
-export { playGame };
+
+playGame();
