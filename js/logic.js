@@ -52,15 +52,17 @@ function playGame() {
   playerScore = 0;
   computerScore = 0;
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 5;) {
     const computerSelection = computerPlay();
     const playerSelection = prompt("Rock, Paper, or Scissors?").toLowerCase();
     const result = playRound(playerSelection, computerSelection);
     console.log(result);
     if (result.includes("win")) {
       playerScore++;
+      i++;
     } else if (result.includes("lose")) {
       computerScore++;
+      i++;
     }
 
   }
