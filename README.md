@@ -1,5 +1,7 @@
 # Rock Paper Scissors
 
+🚀 **Live Demo:** [Play the game](https://mayerfeld-consulting-js-second-game-ten.vercel.app/)
+
 Simple console-based JavaScript game where the player plays Rock, Paper, Scissors against the computer.
 
 ## 📁 Project Structure
