@@ -55,20 +55,23 @@ function playRounds(roundNumber, playerScore, computerScore) {
     return;
   }
 
+  console.log(`--- Round ${roundNumber} ---`);
+  console.log(`Player: ${playerInput.trim()} | Computer: ${computerSelection}`);
+
   let roundMessage = "";
   if (result === "win") {
     playerScore++;
-    roundMessage = `🎉 You Win! ${playerInput} beats ${computerSelection}`;
+    roundMessage = `🎉 You Win! ${playerInput.trim()} beats ${computerSelection}`;
   } else if (result === "lose") {
     computerScore++;
-    roundMessage = `❌ You Lose! ${computerSelection} beats ${playerInput}`;
+    roundMessage = `❌ You Lose! ${computerSelection} beats ${playerInput.trim()}`;
   } else {
     playerScore++;
     computerScore++;
-    roundMessage = `🤝 It's a tie! Both chose ${playerInput}`;
+    roundMessage = `🤝 It's a tie! Both chose ${computerSelection}`;
   }
 
-  console.log(`Round ${roundNumber}: ${roundMessage}`);
+  console.log(`Result: ${roundMessage}`);
   alert(`${roundMessage}\n\nScore: Player ${playerScore} | Computer ${computerScore}`);
   
   playRounds(roundNumber + 1, playerScore, computerScore);
@@ -85,6 +88,7 @@ function finishGame(playerScore, computerScore) {
     finalMessage += "It's a draw! Great match! 🤝";
   }
 
+  console.log("====================");
   console.log(finalMessage);
   alert(finalMessage);
   
