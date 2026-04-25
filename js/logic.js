@@ -1,113 +1,100 @@
 const choices = ["rock", "paper", "scissors"];
 
-const computerPlay = () => {
-  return choices[Math.floor(Math.random() * choices.length)];
-};
+const computerPlay = () => choices[Math.floor(Math.random() * choices.length)];
 
 function playRound(playerSelection, computerSelection) {
-  if (!playerSelection || typeof playerSelection !== "string") {
-    return "Invalid input, round void!";
-  }
-  
-  let playerChoice = playerSelection.toLowerCase().trim();
-  let computerChoice = computerSelection.toLowerCase();
+  const playerChoice = playerSelection.toLowerCase().trim();
+  const computerChoice = computerSelection.toLowerCase();
 
-  if (playerChoice !== "rock" && playerChoice !== "paper" && playerChoice !== "scissors") {
-    return "Invalid input, round void!";
-  }
+  if (!choices.includes(playerChoice)) return "invalid";
+  if (playerChoice === computerChoice) return "tie";
 
-  if (playerChoice === computerChoice) {
-    return "It's a tie!";
-  }
+  const winConditions = {
+    rock: "scissors",
+    paper: "rock",
+    scissors: "paper"
+  };
 
-  if (playerChoice === "rock") {
-    if (computerChoice === "scissors") {
-      return "You win! Rock beats scissors";
-    } else {
-      return "You lose! Paper beats rock";
-    }
-  }
-  if (playerChoice === "paper") {
-    if (computerChoice === "rock") {
-      return "You win! Paper beats rock";
-    } else {
-      return "You lose! Scissors beats paper";
-    }
-  }
-  if (playerChoice === "scissors") {
-    if (computerChoice === "paper") {
-      return "You win! Scissors beats paper";
-    } else {
-      return "You lose! Rock beats scissors";
-    }
-  }
+  return winConditions[playerChoice] === computerChoice ? "win" : "lose";
 }
 
-let playerScore, computerScore;
+function confirmExit() {
+  return confirm("Are you sure you want to exit the game?");
+}
 
-function playGame() {
-  playerScore = 0;
-  computerScore = 0;
+function playRounds(roundNumber, playerScore, computerScore) {
+  const TOTAL_ROUNDS = 5;
 
-  for (let i = 0; i < 5; ) {
-    const computerSelection = computerPlay();
-    const playerInput = prompt("Rock, Paper, or Scissors?");
-    const result = playRound(playerInput, computerSelection);
-    console.log(result);
+  if (roundNumber > TOTAL_ROUNDS) {
+    finishGame(playerScore, computerScore);
+    return;
+  }
 
-    if (result.includes("win")) {
-      alert(result);
-      playerScore++;
-      i++;
-      if (i < 5) {
-        alert("This is round " + (i+1) + " of 5!" + "\nCurrent Score: Player " + playerScore + " : Computer " + computerScore);
-      }
-    } else if (result.includes("lose")) {
-      alert(result);
-      computerScore++;
-      i++;
-      if (i < 5) {
-        alert("This is round " + (i+1) + " of 5!" + "\nCurrent Score: Player " + playerScore + " : Computer " + computerScore);
-      } 
-    } else if (result.includes("tie")) {
-      alert(result);
-      computerScore++;
-      playerScore++;
-      i++;
-     if (i < 5) {
-        alert("This is round " + (i+1) + " of 5!" + "\nCurrent Score: Player " + playerScore + " : Computer " + computerScore);
-      }
+  const computerSelection = computerPlay();
+  const playerInput = prompt(`Round ${roundNumber} of ${TOTAL_ROUNDS}\nEnter Rock, Paper, or Scissors:`);
+
+  if (playerInput === null) {
+    if (confirmExit()) {
+      alert("Game exited. See you next time!");
+      return;
     } else {
-      alert("Invalid input or cancelled. Please try again to complete the 5 rounds!");
+      playRounds(roundNumber, playerScore, computerScore);
+      return;
     }
   }
 
-  console.log(`Final Score: Player ${playerScore} : Computer ${computerScore}`);
+  const result = playRound(playerInput, computerSelection);
+
+  if (result === "invalid") {
+    alert("Invalid input! Please type Rock, Paper, or Scissors.");
+    playRounds(roundNumber, playerScore, computerScore);
+    return;
+  }
+
+  let roundMessage = "";
+  if (result === "win") {
+    playerScore++;
+    roundMessage = `You Win! ${playerInput} beats ${computerSelection}`;
+  } else if (result === "lose") {
+    computerScore++;
+    roundMessage = `You Lose! ${computerSelection} beats ${playerInput}`;
+  } else if (result === "tie") {
+    playerScore++;
+    computerScore++;
+    roundMessage = `It's a tie! Both chose ${playerInput}`;
+  }
+
+  alert(`${roundMessage}\n\nScore: Player ${playerScore} | Computer ${computerScore}`);
+  playRounds(roundNumber + 1, playerScore, computerScore);
+}
+
+function finishGame(playerScore, computerScore) {
+  let finalMessage = `Final Score: Player ${playerScore} : Computer ${computerScore}\n`;
 
   if (playerScore > computerScore) {
-    console.log("Congratulations! You won the game!");
-    alert("Congratulations! You won the game!" + "\nFinal Score: Player " + playerScore + " : Computer " + computerScore);
+    finalMessage += "Congratulations! You won the game!";
   } else if (playerScore < computerScore) {
-    console.log("Sorry, you lost the game!");
-    alert("Sorry, you lost the game!" + "\nFinal Score: Player " + playerScore + " : Computer " + computerScore);
+    finalMessage += "Sorry, the computer won this time.";
   } else {
-    console.log("The game is a tie!");
-    alert("The game is a tie!" + "\nFinal Score: Player " + playerScore + " : Computer " + computerScore);
+    finalMessage += "The game ended in a draw!";
   }
 
-  playAgain();
-}
-
-function playAgain() {
-  const wantToPlayAgain = confirm("Do you want to play again?");
-  if (wantToPlayAgain) {
-    playGame();
+  alert(finalMessage);
+  
+  if (confirm("Do you want to play again?")) {
+    startGame();
   } else {
-    console.log("Thanks for playing!");
+    alert("Thanks for playing!");
   }
 }
 
 function startGame() {
-  confirm("Welcome to Rock, Paper, Scissors! Do you want to play?") ? (alert("Let's play for 5 rounds!"), playGame()) : (console.log("Maybe next time!"), alert("Maybe next time!"));
+  const welcome = confirm("Welcome to Rock, Paper, Scissors! Best of 5 rounds. Ready?");
+  if (welcome) {
+    playRounds(1, 0, 0);
+  } else {
+    alert("Maybe next time!");
+  }
 }
+
 startGame();
